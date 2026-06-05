@@ -30,7 +30,7 @@ public class ProducerDemo {
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
         // create a producer record
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java", "Hello World");
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java_new", "Hello World");
 
         // send data - asynchronous
         //producer.send(producerRecord);
@@ -42,6 +42,7 @@ public class ProducerDemo {
                 log.info("Topic: {}", metadata.topic());
                 log.info("Partition: {}", metadata.partition());
                 log.info("Offset: {}", metadata.offset());
+                log.info("Timestamp: {}", metadata.timestamp());
             } else {
                 log.error("Error while producing", exception);
             }
