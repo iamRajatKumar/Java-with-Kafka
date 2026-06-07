@@ -19,39 +19,47 @@ public class ProducerDemoWithCallback {
         // 1. Create Producer Properties
         Properties properties = new Properties();
         // connect to local Kafka cluster
-        properties.setProperty("bootstrap.servers", "172.17.110.18:9092"); 
-        //change the above IP address value to your local Kafka cluster's IP address
+        properties.setProperty("bootstrap.servers", "172.17.110.18:9092");
+        // change the above IP address value to your local Kafka cluster's IP address
 
         // set the key and value serializer
         properties.setProperty("key.serializer", StringSerializer.class.getName());
         properties.setProperty("value.serializer", StringSerializer.class.getName());
 
+        properties.setProperty("batch.size", "400");
+
         // 2. Create the producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
-        
-        for(int i=0; i<10; i++){
-        // create a producer record
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java_new", "Hello World " + i);
-        
-        // send data - asynchronous with a callback
-        producer.send(producerRecord, (metadata, exception) -> {
-            if (exception == null) {
-                log.info("Message sent successfully!");
-                log.info("Topic: {}", metadata.topic());
-                log.info("Partition: {}", metadata.partition());
-                log.info("Offset: {}", metadata.offset());
-                log.info("Timestamp: {}", metadata.timestamp());
-            } else {
-                log.error("Error while producing", exception);
+        for (int j = 0; j < 10; j++) {
+            for (int i = 0; i < 30; i++) {
+                // create a producer record
+                ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java_new",
+                        "Hello Rajat !  " + i);
+
+                // send data - asynchronous with a callback
+                producer.send(producerRecord, (metadata, exception) -> {
+                    if (exception == null) {
+                        log.info("Message sent successfully!");
+                        log.info("Topic: {}", metadata.topic());
+                        log.info("Partition: {}", metadata.partition());
+                        log.info("Offset: {}", metadata.offset());
+                        log.info("Timestamp: {}", metadata.timestamp());
+                    } else {
+                        log.error("Error while producing", exception);
+                    }
+                });
             }
-        });
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         // send data - asynchronous
-        //producer.send(producerRecord);
-
-        
+        // producer.send(producerRecord);
 
         // flush data - synchronous
         // tell the producer to send all data and block until done - synchronous

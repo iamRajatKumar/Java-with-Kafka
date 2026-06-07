@@ -30,23 +30,23 @@ public class ProducerDemo {
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
         // create a producer record
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java_new", "Hello World");
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java_new", "Hello World ");
 
         // send data - asynchronous
-        //producer.send(producerRecord);
+        producer.send(producerRecord);
 
-        // send data - asynchronous with a callback
-        producer.send(producerRecord, (metadata, exception) -> {
-            if (exception == null) {
-                log.info("Message sent successfully!");
-                log.info("Topic: {}", metadata.topic());
-                log.info("Partition: {}", metadata.partition());
-                log.info("Offset: {}", metadata.offset());
-                log.info("Timestamp: {}", metadata.timestamp());
-            } else {
-                log.error("Error while producing", exception);
-            }
-        });
+        // // send data - asynchronous with a callback
+        // producer.send(producerRecord, (metadata, exception) -> {
+        //     if (exception == null) {
+        //         log.info("Message sent successfully!");
+        //         log.info("Topic: {}", metadata.topic());
+        //         log.info("Partition: {}", metadata.partition());
+        //         log.info("Offset: {}", metadata.offset());
+        //         log.info("Timestamp: {}", metadata.timestamp());
+        //     } else {
+        //         log.error("Error while producing", exception);
+        //     }
+        // });
 
         // flush data - synchronous
         // tell the producer to send all data and block until done - synchronous
