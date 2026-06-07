@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,12 @@ public class ProducerDemoWithCallback {
         properties.setProperty("key.serializer", StringSerializer.class.getName());
         properties.setProperty("value.serializer", StringSerializer.class.getName());
 
+        // Controls how much data Kafka collects before sending messages in one network request (improves throughput).
         properties.setProperty("batch.size", "400");
+
+        // set the partitioner class to round robin partitioner
+        // round robin partitioner ensures that messages are distributed evenly across all partitions.
+        properties.setProperty("partitioner.class", RoundRobinPartitioner.class.getName());
 
         // 2. Create the producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
